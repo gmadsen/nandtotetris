@@ -14,4 +14,9 @@ CHIP Inc16 {
 
     PARTS:
    // Put you code here:
+   
+   Not16(in=in, out=notin); 
+   Add16(a=true, b=notin, out=preout);
+   Not16(in=preout, out=out);
+
 }
