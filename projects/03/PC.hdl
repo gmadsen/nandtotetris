@@ -17,4 +17,14 @@ CHIP PC {
 
     PARTS:
     // Put your code here:
+    Mux16(a=in, b=false, sel=reset, out=resetout);
+    // logic for load 
+    Not(in=reset, out=notreset);
+    And(a=notreset, b=load, out=notresetandload);
+    Or(a=notresetandload, b=reset, out=notresetandloadorreset);
+    Mux16(b=resetout, a=incmuxout, sel=notresetandloadorreset, out=intoreg); 
+    Register(in=intoreg, load=true, out=regout);
+    Inc16(in=regout, out=incout);
+    Mux16(a=regout, b=incout, sel=inc, out=incmuxout);
+    And16(a=regout, b=true, out=out);
 }
