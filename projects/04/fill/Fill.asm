@@ -12,3 +12,67 @@
 // the screen should remain fully clear as long as no key is pressed.
 
 // Put your code here.
+// ok
+
+@SCREEN
+D=A
+@addr
+M=D // addr = screen base address
+
+
+//@8192 // # of ram registers for screen
+@8191
+D=A
+@size
+M=D
+
+//check for input, if any paint black, else paint white
+(LOOP)
+// start with a fresh iter
+@i
+M=0
+
+@KBD
+D=M
+@BLACK
+D;JNE
+@WHITE
+0;JMP
+
+(BLACK)
+@addr
+D=M
+@i
+D=D+M
+A=D
+M=-1
+
+@i
+D=M
+@size
+D=D-M
+@LOOP
+D;JEQ
+@i
+M=M+1
+@BLACK
+0;JMP
+
+(WHITE)
+@addr
+D=M
+@i
+D=D+M
+A=D
+M=0
+
+@i
+D=M
+@size
+D=D-M
+@LOOP
+D;JEQ
+@i
+M=M+1
+@WHITE
+0;JMP
