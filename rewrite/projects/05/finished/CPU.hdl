@@ -1,0 +1,133 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/05/CPU.hdl
+
+/**
+ * The Hack CPU (Central Processing unit), consisting of an ALU,
+ * two registers named A and D, and a program counter named PC.
+ * The CPU is designed to fetch and execute instructions written in 
+ * the Hack machine language. In particular, functions as follows:
+ * Executes the inputted instruction according to the Hack machine 
+ * language specification. The D and A in the language specification
+ * refer to CPU-resident registers, while M refers to the external
+ * memory location addressed by A, i.e. to Memory[A]. The inM input 
+ * holds the value of this location. If the current instruction needs 
+ * to write a value to M, the value is placed in outM, the address 
+ * of the target location is placed in the addressM output, and the 
+ * writeM control bit is asserted. (When writeM==0, any value may 
+ * appear in outM). The outM and writeM outputs are combinational: 
+ * they are affected instantaneously by the execution of the current 
+ * instruction. The addressM and pc outputs are clocked: although they 
+ * are affected by the execution of the current instruction, they commit 
+ * to their new values only in the next time step. If reset==1 then the 
+ * CPU jumps to address 0 (i.e. pc is set to 0 in next time step) rather 
+ * than to the address resulting from executing the current instruction. 
+ */
+
+CHIP CPU {
+
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset==1) or continue executing
+                         // the current program (reset==0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write to M? 
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
+
+    PARTS:
+    // Put your code here:
+    Mux16(a=instruction, b=ALUoutput, sel=instruction[15], out=instructOut);
+
+    // A register
+    And(a=instruction[5], b=instruction[15], out=Aregload0);
+    Not(in=instruction[15], out=aInstruct);
+    Or(a=Aregload0, b=aInstruct, out=loadAreg);
+    ARegister(in=instructOut, load=loadAreg, out=Aregout);
+
+    // D register
+    DRegister(in=ALUoutput, load=instruction[4], out=Dreg);
+
+    // choose in memory or A register
+    Mux16(a=Aregout, b=inM, sel=instruction[12], out=AorM);
+    
+    // not sure how to do a single input direct to output, so will use or
+    And(a=instruction[15], b=instruction[3], out=writeM);
+    Or16(a=false, b= Aregout, out[0..14]=addressM);
+    Or16(a=false, b= ALUoutput, out=outM);
+
+    ALU(x=Dreg, y=AorM, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=ALUoutput, zr=zr, ng=ng);
+
+    // PC stuff
+    PC(in=Aregout, reset=reset, load=jmpOut, inc=notjmpOut , out[0..14]=pc);
+
+    // easier names 
+    Or(a=false, b=instruction[0], out=j0);
+    Or(a=false, b=instruction[1], out=j1);
+    Or(a=false, b=instruction[2], out=j2);
+
+    // unconditional jmp
+    And(a=j0, b=j1, out=jmpA);
+    And(a=jmpA, b=j2, out=jmp);
+
+    // less or equal 0 jle
+    Or(a=zr, b=ng, out =jleA);
+    And(a=j1, b=j2, out=jleB);
+    And(a=jleA, b=jleB, out=jleC);
+    Not(in=j0, out=jleD);
+    And(a=jleC, b=jleD, out=jle);
+
+    // not 0 jne
+    Not(in=zr, out=jneA);
+    And(a=j2, b=j0, out=jneB);
+    And(a=jneA, b=jneB, out=jne);
+
+    // less than  jlt
+    And(a=ng, b=j2, out=jltA);
+    Not(in=j0, out=jltB);
+    Not(in=j1, out=jltC);
+    And(a=jltB, b=jltC, out=jltD);
+    And(a=jltA, b=jltD, out=jlt);
+
+    // greater or equal jge
+    Not(in=ng, out=jgeA);
+    Or(a=zr, b=jgeA, out=jgeB);
+    And(a=j0, b=j1, out=jgeC);
+    And(a=jgeB, b=jgeC, out=jgeD);
+    Not(in=j2, out=jgeE);
+    And(a=jgeE, b=jgeD, out=jge);
+
+    // equal jeq
+    And(a=zr, b=j1, out=jeqA);
+    Not(in=j2, out=jeqB);
+    Not(in=j0, out=jeqC);
+    And(a=jeqB, b=jeqC, out=jeqD);
+    And(a=jeqA, b=jeqD, out=jeq);
+
+    // greater than jgt
+    // Not(in=ng, out=jgtA);
+    // And(a=j0, b=jgtA, out=jgtB);
+    Not(in=ng, out=jgt0);
+    Not(in=zr, out=jgt1);
+    And(a=jgt0, b=jgt1, out=jgt2);
+    And(a=j0, b=jgt2, out=jgtB);
+
+    Not(in=j2, out=jgtC);
+    Not(in=j1, out=jgtD);
+    And(a=jgtC, b=jgtD, out=jgtE);
+    And(a=jgtB, b=jgtE, out=jgt);
+
+    // combine all
+    Or8Way(in[0]=jmp, in[1]=jle, in[2]=jne, in[3]=jlt, in[4]=jge, in[5]=jeq, in[6]=jgt, out=jmpCombin);
+    And(a=jmpCombin, b=instruction[15], out=jmpOut);
+    Not(in=jmpOut, out=notjmpOut);
+
+     
+
+
+
+
+}

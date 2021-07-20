@@ -1,0 +1,29 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/Mux.hdl
+
+/** 
+ * Multiplexor:
+ * out = a if sel == 0
+ *       b otherwise
+ */
+
+CHIP Mux8Way {
+    IN a, b, c, d, e, f, g, h, sel[3];
+    OUT out;
+
+    PARTS:
+    // Put your code here:
+    Mux(a=a, b=b, sel=sel[0], out=one);
+    Mux(a=c, b=d, sel=sel[0], out=two);
+    Mux(a=e, b=f, sel=sel[0], out=three);
+    Mux(a=g, b=h, sel=sel[0], out=four);
+    
+    // second level
+    Mux(a=one, b=two, sel=sel[1], out=five);
+    Mux(a=three, b=four, sel=sel[1], out=six);
+
+    // third level
+    Mux(a=five, b=six, sel=sel[2], out=out);
+}
