@@ -24,11 +24,24 @@ public:
         m_dest_map[""]      = "000";
         m_dest_map["M"]     = "001";
         m_dest_map["D"]     = "010";
+
         m_dest_map["DM"]    = "011";
+        m_dest_map["MD"]    = "011";
+
         m_dest_map["A"]     = "100";
+
         m_dest_map["AM"]    = "101";
+        m_dest_map["MA"]    = "101";
+
         m_dest_map["AD"]    = "110";
+        m_dest_map["DM"]    = "110";
+
         m_dest_map["ADM"]   = "111";
+        m_dest_map["AMD"]   = "111";
+        m_dest_map["DAM"]   = "111";
+        m_dest_map["DMA"]   = "111";
+        m_dest_map["MAD"]   = "111";
+        m_dest_map["MDA"]   = "111";
 
         // comp map
         m_comp_map["0"] = "0101010";
