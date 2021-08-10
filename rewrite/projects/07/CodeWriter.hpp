@@ -66,6 +66,7 @@ public:
             out_file << "@0" << "\n";
             out_file << "D=!A" << "\n";
             replaceCurrentTopMemWithD(out_file);
+            addExitConditionalLabel(out_file);
 
             incrementStackPointer(out_file);
             out_file << "//finished eq \n\n";

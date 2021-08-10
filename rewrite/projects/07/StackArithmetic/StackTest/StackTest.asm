@@ -41,169 +41,28 @@ D=!A
 @SP
 A=M
 M=D
-@SP
-M=M+1
-//finished eq 
-
-@17
-D=A
-@SP
-A=M
-M=D
-@SP
-M=M+1
-// finished pushing: constant 17
-
-@16
-D=A
-@SP
-A=M
-M=D
-@SP
-M=M+1
-// finished pushing: constant 16
-
-@SP
-M=M-1
-A=M
-D=M
-@SP
-M=M-1
-A=M
-D=M-D
-@TRUE_VALUE_0
-D;JEQ
-//entering false branch 
-@0
-D=A
-@SP
-A=M
-M=D
-@EXIT_CONDITIONAL_0
-0;JMP
-//entering true branch 
-(TRUE_VALUE_0)
-@0
-D=!A
-@SP
-A=M
-M=D
-@SP
-M=M+1
-//finished eq 
-
-@16
-D=A
-@SP
-A=M
-M=D
-@SP
-M=M+1
-// finished pushing: constant 16
-
-@17
-D=A
-@SP
-A=M
-M=D
-@SP
-M=M+1
-// finished pushing: constant 17
-
-@SP
-M=M-1
-A=M
-D=M
-@SP
-M=M-1
-A=M
-D=M-D
-@TRUE_VALUE_0
-D;JEQ
-//entering false branch 
-@0
-D=A
-@SP
-A=M
-M=D
-@EXIT_CONDITIONAL_0
-0;JMP
-//entering true branch 
-(TRUE_VALUE_0)
-@0
-D=!A
-@SP
-A=M
-M=D
-@SP
-M=M+1
-//finished eq 
-
-@892
-D=A
-@SP
-A=M
-M=D
-@SP
-M=M+1
-// finished pushing: constant 892
-
-@891
-D=A
-@SP
-A=M
-M=D
-@SP
-M=M+1
-// finished pushing: constant 891
-
-@SP
-M=M-1
-A=M
-D=M
-@SP
-M=M-1
-A=M
-D=M-D
-@TRUE_VALUE_0
-D;JLT
-//entering false branch 
-@0
-D=A
-@SP
-A=M
-M=D
-@EXIT_CONDITIONAL_0
-0;JMP
-//entering true branch 
-(TRUE_VALUE_0)
-@0
-D=!A
-@SP
-A=M
-M=D
 (EXIT_CONDITIONAL_0)
 @SP
 M=M+1
-//finished lt 
+//finished eq 
 
-@891
+@17
 D=A
 @SP
 A=M
 M=D
 @SP
 M=M+1
-// finished pushing: constant 891
+// finished pushing: constant 17
 
-@892
+@16
 D=A
 @SP
 A=M
 M=D
 @SP
 M=M+1
-// finished pushing: constant 892
+// finished pushing: constant 16
 
 @SP
 M=M-1
@@ -214,7 +73,7 @@ M=M-1
 A=M
 D=M-D
 @TRUE_VALUE_1
-D;JLT
+D;JEQ
 //entering false branch 
 @0
 D=A
@@ -233,25 +92,25 @@ M=D
 (EXIT_CONDITIONAL_1)
 @SP
 M=M+1
-//finished lt 
+//finished eq 
 
-@891
+@16
 D=A
 @SP
 A=M
 M=D
 @SP
 M=M+1
-// finished pushing: constant 891
+// finished pushing: constant 16
 
-@891
+@17
 D=A
 @SP
 A=M
 M=D
 @SP
 M=M+1
-// finished pushing: constant 891
+// finished pushing: constant 17
 
 @SP
 M=M-1
@@ -262,7 +121,7 @@ M=M-1
 A=M
 D=M-D
 @TRUE_VALUE_2
-D;JLT
+D;JEQ
 //entering false branch 
 @0
 D=A
@@ -281,6 +140,150 @@ M=D
 (EXIT_CONDITIONAL_2)
 @SP
 M=M+1
+//finished eq 
+
+@892
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// finished pushing: constant 892
+
+@891
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// finished pushing: constant 891
+
+@SP
+M=M-1
+A=M
+D=M
+@SP
+M=M-1
+A=M
+D=M-D
+@TRUE_VALUE_3
+D;JLT
+//entering false branch 
+@0
+D=A
+@SP
+A=M
+M=D
+@EXIT_CONDITIONAL_3
+0;JMP
+//entering true branch 
+(TRUE_VALUE_3)
+@0
+D=!A
+@SP
+A=M
+M=D
+(EXIT_CONDITIONAL_3)
+@SP
+M=M+1
+//finished lt 
+
+@891
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// finished pushing: constant 891
+
+@892
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// finished pushing: constant 892
+
+@SP
+M=M-1
+A=M
+D=M
+@SP
+M=M-1
+A=M
+D=M-D
+@TRUE_VALUE_4
+D;JLT
+//entering false branch 
+@0
+D=A
+@SP
+A=M
+M=D
+@EXIT_CONDITIONAL_4
+0;JMP
+//entering true branch 
+(TRUE_VALUE_4)
+@0
+D=!A
+@SP
+A=M
+M=D
+(EXIT_CONDITIONAL_4)
+@SP
+M=M+1
+//finished lt 
+
+@891
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// finished pushing: constant 891
+
+@891
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// finished pushing: constant 891
+
+@SP
+M=M-1
+A=M
+D=M
+@SP
+M=M-1
+A=M
+D=M-D
+@TRUE_VALUE_5
+D;JLT
+//entering false branch 
+@0
+D=A
+@SP
+A=M
+M=D
+@EXIT_CONDITIONAL_5
+0;JMP
+//entering true branch 
+(TRUE_VALUE_5)
+@0
+D=!A
+@SP
+A=M
+M=D
+(EXIT_CONDITIONAL_5)
+@SP
+M=M+1
 //finished lt 
 
 @32767
@@ -309,7 +312,7 @@ D=M
 M=M-1
 A=M
 D=M-D
-@TRUE_VALUE_3
+@TRUE_VALUE_6
 D;JGT
 //entering false branch 
 @0
@@ -317,16 +320,16 @@ D=A
 @SP
 A=M
 M=D
-@EXIT_CONDITIONAL_3
+@EXIT_CONDITIONAL_6
 0;JMP
 //entering true branch 
-(TRUE_VALUE_3)
+(TRUE_VALUE_6)
 @0
 D=!A
 @SP
 A=M
 M=D
-(EXIT_CONDITIONAL_3)
+(EXIT_CONDITIONAL_6)
 @SP
 M=M+1
 //finished gt 
@@ -357,7 +360,7 @@ D=M
 M=M-1
 A=M
 D=M-D
-@TRUE_VALUE_4
+@TRUE_VALUE_7
 D;JGT
 //entering false branch 
 @0
@@ -365,16 +368,16 @@ D=A
 @SP
 A=M
 M=D
-@EXIT_CONDITIONAL_4
+@EXIT_CONDITIONAL_7
 0;JMP
 //entering true branch 
-(TRUE_VALUE_4)
+(TRUE_VALUE_7)
 @0
 D=!A
 @SP
 A=M
 M=D
-(EXIT_CONDITIONAL_4)
+(EXIT_CONDITIONAL_7)
 @SP
 M=M+1
 //finished gt 
@@ -405,7 +408,7 @@ D=M
 M=M-1
 A=M
 D=M-D
-@TRUE_VALUE_5
+@TRUE_VALUE_8
 D;JGT
 //entering false branch 
 @0
@@ -413,16 +416,16 @@ D=A
 @SP
 A=M
 M=D
-@EXIT_CONDITIONAL_5
+@EXIT_CONDITIONAL_8
 0;JMP
 //entering true branch 
-(TRUE_VALUE_5)
+(TRUE_VALUE_8)
 @0
 D=!A
 @SP
 A=M
 M=D
-(EXIT_CONDITIONAL_5)
+(EXIT_CONDITIONAL_8)
 @SP
 M=M+1
 //finished gt 
@@ -494,6 +497,18 @@ M=-M
 @SP
 M=M+1
 //finished neg 
+
+@SP
+M=M-1
+A=M
+D=M
+@SP
+M=M-1
+A=M
+M=M&D
+@SP
+M=M+1
+//finished and 
 
 @82
 D=A

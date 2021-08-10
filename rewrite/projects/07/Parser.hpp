@@ -66,7 +66,7 @@ public:
                 m_command_type =  CommandType::C_POP;
                 continue;
             }
-            else if (word == "add" || word == "sub" || word == "neg" || word == "eq" || word == "gt" || word == "lt" || word == "nd" || word == "or" || word == "not")
+            else if (word == "add" || word == "sub" || word == "neg" || word == "eq" || word == "gt" || word == "lt" || word == "and" || word == "or" || word == "not")
             {
                 m_command_type = CommandType::C_ARITHMETIC;
                 m_arguments.push_back(word);
