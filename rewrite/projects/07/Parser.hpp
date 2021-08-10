@@ -36,12 +36,12 @@ public:
 
     bool hasMoreLines()
     {
-        //std::cout << "eof ? : " << m_in_file.eof() << "\n";
         return !m_in_file.eof();
     }
 
     void advanced()
     {
+        m_arguments.clear();
         m_command_type = CommandType::COMMENT;
 
         std::getline(m_in_file, m_curr_line);
@@ -49,33 +49,34 @@ public:
 
         std::stringstream s(m_curr_line);
         std::string word;
-        //int count = 0;
         while (s >> word)
         {
-            //std::cout << "count: " << count << " word: " << word << "\n";
-            //count++;
             if (word.find("//") != std::string::npos)
             {
                 return;
             }
            
-            if (word == "push")
+            else if (word == "push")
             {
                 m_command_type =  CommandType::C_PUSH;
                 continue;
             }
-            if (word == "pop")
+            else if (word == "pop")
             {
                 m_command_type =  CommandType::C_POP;
                 continue;
             }
-            if (word == "add" || word == "sub" || word == "neg")
+            else if (word == "add" || word == "sub" || word == "neg" || word == "eq" || word == "gt" || word == "lt" || word == "nd" || word == "or" || word == "not")
             {
                 m_command_type = CommandType::C_ARITHMETIC;
                 m_arguments.push_back(word);
-                continue;
+                return;
             }
-            m_arguments.push_back(word);
+            else
+            {
+                m_arguments.push_back(word);
+            }
+            
         }
         return;
 
@@ -87,19 +88,14 @@ public:
         m_in_file.seekg(0);
     }
 
-    CommandType getCommandType()
+    const CommandType getCommandType()
     {
         return m_command_type;
     }
 
-    std::string getArg1()
+    const std::vector<std::string>& getArgs()
     {
-        return m_arguments[0];
-    }
-
-    int getArg2()
-    {
-        return stoi(m_arguments[1]);
+        return m_arguments;
     }
 
 private:

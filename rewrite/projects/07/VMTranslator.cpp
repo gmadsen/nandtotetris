@@ -1,4 +1,5 @@
 #include "CodeWriter.hpp"
+#include <cassert>
 
 
 class VMTranslator
@@ -16,16 +17,23 @@ public:
         while (m_parser.hasMoreLines())
         {
             m_parser.advanced();
-            if (m_parser.getCommandType == CommandType::C_PUSH || m_parser.getCommandType == CommandType::C_POP)
+            if (m_parser.getCommandType() == CommandType::C_PUSH || m_parser.getCommandType() == CommandType::C_POP)
             {
-                m_writer.writePushPop(m_parser.getArg1);
+                assert(m_parser.getArgs().size() == 2);
+                m_writer.writePushPop(m_parser.getCommandType(), m_parser.getArgs()[0], stoi(m_parser.getArgs()[1]));
             }
-            if (m_parser.getCommandType == CommandType::C_ARITHMETIC)
+            if (m_parser.getCommandType() == CommandType::C_ARITHMETIC)
             {
-                m_writer.writeArithmetic(m_parser.getCommandType(), m_parser.getArg1(), m_parser.getArg2);
+                assert(m_parser.getArgs().size() == 1);
+                m_writer.writeArithmetic(m_parser.getArgs()[0]);
             }
-            //std::cout << static_cast<uint>(m_parser.getCommandType()) << "\n";
+            // std::cout << static_cast<uint>(m_parser.getCommandType()) << "\n";
+            // for (const auto& arg : m_parser.getArgs())
+            // {
+            //     std::cout << "arg: " << arg << "\n"; 
+            // }
         }
+        m_writer.writeEndLoop();
     }
 private:
     Parser& m_parser;
