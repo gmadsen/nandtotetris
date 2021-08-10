@@ -22,173 +22,130 @@ public:
     {
         if (command == "add")
         {
-            out_file << "@SP" << "\n";
-            out_file << "M=M-1" << "\n";
-            out_file << "A=M" << "\n";
+            goToNextValueMem(out_file);
             out_file << "D=M" << "\n";
-            out_file << "@SP" << "\n";
-            out_file << "M=M-1" << "\n";
-            out_file << "A=M" << "\n";
+            goToNextValueMem(out_file);
             out_file << "M=M+D" << "\n";
-            out_file << "@SP" << "\n";
-            out_file << "M=M+1" << " // finished adding \n" << std::endl; 
+            incrementStackPointer(out_file);
+            out_file <<  "// finished adding \n\n"; 
         }
         else if (command == "sub")
         {
-            out_file << "@SP" << "\n";
-            out_file << "M=M-1" << "\n";
-            out_file << "A=M" << "\n";
+            goToNextValueMem(out_file);
             out_file << "D=M" << "\n";
-            out_file << "@SP" << "\n";
-            out_file << "M=M-1" << "\n";
-            out_file << "A=M" << "\n";
-            out_file << "M=M+D" << "\n";
-            out_file << "@SP" << "\n";
-            out_file << "M=M+1" << " // finished substraction \n" << std::endl; 
+            goToNextValueMem(out_file);
+            out_file << "M=M-D" << "\n";
+            incrementStackPointer(out_file);
+            out_file <<  "// finished substraction \n\n";  
  
         }
         else if (command == "neg")
         {
-            out_file << "@SP" << "\n";
-            out_file << "M=M-1" << "\n";
-            out_file << "A=M" << "\n";
+            goToNextValueMem(out_file);
             out_file << "M=-M" << "\n";
-            out_file << "@SP" << "\n";
-            out_file << "M=M+1" << "\n";
-            out_file << "\n";
+            incrementStackPointer(out_file);
+            out_file << "//finished neg \n\n";
         }
         else if (command == "eq")
         {
-            out_file << "@SP" << "\n";
-            out_file << "M=M-1" << "\n";
-            out_file << "A=M" << "\n";
+            goToNextValueMem(out_file);
             out_file << "D=M" << "\n";
-            out_file << "@SP" << "\n";
-            out_file << "M=M-1" << "\n";
-            out_file << "A=M" << "\n";
+            goToNextValueMem(out_file);
             out_file << "D=M-D" << "\n";
-            out_file << "@TRUE_VALUE" << "\n";
+            atTrueVar(out_file);
             out_file << "D;JEQ" << "\n";
-            // false code
+
+            out_file << "//entering false branch \n";
             out_file << "@0" << "\n";
             out_file << "D=A" << "\n";
-            out_file << "@SP" << "\n";
-            out_file << "A=M" << "\n";
-            out_file << "M=D" << "\n";
-            // true code
-            out_file << "(TRUE_VALUE)" << "\n";
+            replaceCurrentTopMemWithD(out_file);
+            jumpToExitConditionalVar(out_file);
+
+            out_file << "//entering true branch \n";
+            addTrueLabel(out_file);
             out_file << "@0" << "\n";
             out_file << "D=!A" << "\n";
-            out_file << "@SP" << "\n";
-            out_file << "A=M" << "\n";
-            out_file << "M=D" << "\n";
+            replaceCurrentTopMemWithD(out_file);
 
-            // continue
-            out_file << "@SP" << "\n";
-            out_file << "M=M+1" << "\n";
-
-            out_file << "\n";
+            incrementStackPointer(out_file);
+            out_file << "//finished eq \n\n";
         }
         else if (command == "gt")
         {
-            out_file << "@SP" << "\n";
-            out_file << "M=M-1" << "\n";
-            out_file << "A=M" << "\n";
+            goToNextValueMem(out_file);
             out_file << "D=M" << "\n";
-            out_file << "@SP" << "\n";
-            out_file << "M=M-1" << "\n";
-            out_file << "A=M" << "\n";
+            goToNextValueMem(out_file);
             out_file << "D=M-D" << "\n";
-            out_file << "@TRUE_VALUE" << "\n";
+            atTrueVar(out_file);
             out_file << "D;JGT" << "\n";
-            // false code
+
+            out_file << "//entering false branch \n";
             out_file << "@0" << "\n";
             out_file << "D=A" << "\n";
-            out_file << "@SP" << "\n";
-            out_file << "A=M" << "\n";
-            out_file << "M=D" << "\n";
-            // true code
-            out_file << "(TRUE_VALUE)" << "\n";
+            replaceCurrentTopMemWithD(out_file);
+            jumpToExitConditionalVar(out_file);
+
+            out_file << "//entering true branch \n";
+            addTrueLabel(out_file);
             out_file << "@0" << "\n";
             out_file << "D=!A" << "\n";
-            out_file << "@SP" << "\n";
-            out_file << "A=M" << "\n";
-            out_file << "M=D" << "\n";
-
-            // continue
-            out_file << "@SP" << "\n";
-            out_file << "M=M+1" << "\n";
-
-            out_file << "\n";
+            replaceCurrentTopMemWithD(out_file);
+            addExitConditionalLabel(out_file);
+            incrementStackPointer(out_file);
+            out_file << "//finished gt \n\n";
 
         }
         else if (command == "lt")
         {
-            out_file << "@SP" << "\n";
-            out_file << "M=M-1" << "\n";
-            out_file << "A=M" << "\n";
+            goToNextValueMem(out_file);
             out_file << "D=M" << "\n";
-            out_file << "@SP" << "\n";
-            out_file << "M=M-1" << "\n";
-            out_file << "A=M" << "\n";
+            goToNextValueMem(out_file);
             out_file << "D=M-D" << "\n";
-            out_file << "@TRUE_VALUE" << "\n";
-            out_file << "D;JGT" << "\n";
-            // false code
+            atTrueVar(out_file);
+            out_file << "D;JLT" << "\n";
+
+            out_file << "//entering false branch \n";
             out_file << "@0" << "\n";
             out_file << "D=A" << "\n";
-            out_file << "@SP" << "\n";
-            out_file << "A=M" << "\n";
-            out_file << "M=D" << "\n";
-            // true code
-            out_file << "(TRUE_VALUE)" << "\n";
+            replaceCurrentTopMemWithD(out_file);
+            jumpToExitConditionalVar(out_file);
+
+            out_file << "//entering true branch \n";
+            addTrueLabel(out_file);
             out_file << "@0" << "\n";
             out_file << "D=!A" << "\n";
-            out_file << "@SP" << "\n";
-            out_file << "A=M" << "\n";
-            out_file << "M=D" << "\n";
+            replaceCurrentTopMemWithD(out_file);
 
-            // continue
-            out_file << "@SP" << "\n";
-            out_file << "M=M+1" << "\n";
-            out_file << "\n";
+            addExitConditionalLabel(out_file);
+            incrementStackPointer(out_file);
+            out_file << "//finished lt \n\n";
         }
         else if (command == "and")
         {
-            out_file << "@SP" << "\n";
-            out_file << "M=M-1" << "\n";
-            out_file << "A=M" << "\n";
+            goToNextValueMem(out_file);
             out_file << "D=M" << "\n";
-            out_file << "@SP" << "\n";
-            out_file << "M=M-1" << "\n";
-            out_file << "A=M" << "\n";
+            goToNextValueMem(out_file);
             out_file << "M=M&D" << "\n";
-            out_file << "@SP" << "\n";
-            out_file << "M=M+1" << " // finished AND \n" << std::endl; 
+
+            incrementStackPointer(out_file);
+            out_file << "//finished and \n\n";
         }
         else if (command == "or")
         {
-            out_file << "@SP" << "\n";
-            out_file << "M=M-1" << "\n";
-            out_file << "A=M" << "\n";
+            goToNextValueMem(out_file);
             out_file << "D=M" << "\n";
-            out_file << "@SP" << "\n";
-            out_file << "M=M-1" << "\n";
-            out_file << "A=M" << "\n";
+            goToNextValueMem(out_file);
             out_file << "M=M|D" << "\n";
-            out_file << "@SP" << "\n";
-            out_file << "M=M+1" << " // finished AND \n" << std::endl; 
+            incrementStackPointer(out_file);
+            out_file << "//finished or \n\n";
  
         }
         else if (command == "not")
         {
-            out_file << "@SP" << "\n";
-            out_file << "M=M-1" << "\n";
-            out_file << "A=M" << "\n";
+            goToNextValueMem(out_file);
             out_file << "M=!M" << "\n";
-            out_file << "@SP" << "\n";
-            out_file << "M=M+1" << "\n";
-            out_file << "\n";
+            incrementStackPointer(out_file);
+            out_file << "//finished not \n\n";
  
         }
 
@@ -200,11 +157,9 @@ public:
        {
            out_file << "@" << std::to_string(index) << "\n";
            out_file << "D=A" << "\n"; 
-           out_file << "@SP" << "\n"; 
-           out_file << "A=M" << "\n"; 
-           out_file << "M=D" << "\n"; 
-           out_file << "@SP" << "\n"; 
-           out_file << "M=M+1" << "  // finished pushing: " << segment << " " << std::to_string(index) << "\n" << std::endl; 
+           replaceCurrentTopMemWithD(out_file);
+           incrementStackPointer(out_file);
+           out_file << "// finished pushing: " << segment << " " << std::to_string(index) << "\n\n"; 
 
        }
        else if (command == CommandType::C_POP)
@@ -227,9 +182,42 @@ public:
 
 
 private:
-    void enterNextLevelOfStack()
+
+    void atTrueVar(std::ofstream& out)
     {
-        return;
+        out_file << "@TRUE_VALUE_" << std::to_string(m_true_count) << "\n";
+    }
+    void addTrueLabel(std::ofstream& out)
+    {
+        out_file << "(TRUE_VALUE_" << std::to_string(m_true_count) << ")" << "\n";
+    }
+    void jumpToExitConditionalVar(std::ofstream& out)
+    {
+        out_file << "@EXIT_CONDITIONAL_" << std::to_string(m_true_count) << "\n";
+        out_file << "0;JMP" << "\n";
+    }
+    void addExitConditionalLabel(std::ofstream& out)
+    {
+        out_file << "(EXIT_CONDITIONAL_" << std::to_string(m_true_count) << ")" << "\n";
+        m_true_count++;
+    }
+    void goToNextValueMem(std::ofstream& out)  
+    {
+        out_file << "@SP" << "\n";
+        out_file << "M=M-1" << "\n";
+        out_file << "A=M" << "\n";
+    }
+    void replaceCurrentTopMemWithD(std::ofstream& out)
+    {
+        out_file << "@SP" << "\n";
+        out_file << "A=M" << "\n";
+        out_file << "M=D" << "\n";
+    }
+    void incrementStackPointer(std::ofstream& out)
+    {
+        out_file << "@SP" << "\n";
+        out_file << "M=M+1" << "\n";
     }
     std::ofstream out_file;
+    uint m_true_count;
 };
