@@ -2,12 +2,19 @@
 
 #include <string>
 #include <iostream>
+#include <unordered_map>
 
 class CodeWriter
 {
 public:
     CodeWriter(std::string name) 
     {
+        m_segment_map["local"] = "LCL";
+        m_segment_map["argument"] = "ARG";
+        m_segment_map["this"] = "THIS";
+        m_segment_map["that"] = "THAT";
+        m_segment_map["temp"] = "TEMP";
+
         auto pos = name.rfind('.');
         auto file_name = name.substr(0, pos) + ".asm";
         out_file.open(file_name);
@@ -154,19 +161,45 @@ public:
 
     void writePushPop(CommandType command, std::string segment, int index)
     {
-       if (command == CommandType::C_PUSH) 
-       {
-           out_file << "@" << std::to_string(index) << "\n";
-           out_file << "D=A" << "\n"; 
-           replaceCurrentTopMemWithD(out_file);
-           incrementStackPointer(out_file);
+
+        if (command == CommandType::C_PUSH) 
+        {
+            if (segment == "constant") 
+            {
+                out_file << "@" << std::to_string(index) << "\n";
+                out_file << "D=A" << "\n"; 
+                replaceCurrentTopMemWithD(out_file);
+                incrementStackPointer(out_file);
+ 
+            }
+            else
+            {
+                auto asm_segment = m_segment_map[segment];
+                addSegmentAddressToR14(out_file, asm_segment, index);
+                out_file << "A=D" << "\n";
+                out_file << "D=M" << "\n";
+                replaceCurrentTopMemWithD(out_file);
+                incrementStackPointer(out_file);
+            }
            out_file << "// finished pushing: " << segment << " " << std::to_string(index) << "\n\n"; 
 
-       }
-       else if (command == CommandType::C_POP)
-       {
-           return;
-       }
+        }
+        else if (command == CommandType::C_POP)
+        {
+            goToNextValueMem(out_file);
+            out_file << "D=M" << "\n";
+            out_file << "@R13" << "\n";
+            out_file << "M=D" << "\n";
+
+            auto asm_segment = m_segment_map[segment];
+            addSegmentAddressToR14(out_file, asm_segment, index);
+
+            out_file << "@R13" << "\n";
+            out_file << "D=M" << "\n";
+            out_file << "@R14" << "\n";
+            out_file << "A=M" << "\n";
+            out_file << "M=D" << "\n";
+        }
     }
 
     void writeEndLoop()
@@ -183,7 +216,15 @@ public:
 
 
 private:
-
+    void addSegmentAddressToR14(std::ofstream& out, const std::string& segment, const int index)
+    {
+           out << "@" << index << "\n";
+           out << "D=A" << "\n";
+           out << "@" << segment << "\n";
+           out << "D=M+D" << "\n";
+           out << "@R14" << "\n";
+           out << "M=D" << "\n";
+    }
     void atTrueVar(std::ofstream& out)
     {
         out_file << "@TRUE_VALUE_" << std::to_string(m_true_count) << "\n";
@@ -220,5 +261,6 @@ private:
         out_file << "M=M+1" << "\n";
     }
     std::ofstream out_file;
+    std::unordered_map<std::string,std::string> m_segment_map;
     uint m_true_count;
 };
