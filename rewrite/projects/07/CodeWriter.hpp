@@ -174,10 +174,21 @@ public:
             }
             else
             {
-                auto asm_segment = m_segment_map[segment];
-                addSegmentAddressToR14(out_file, asm_segment, index);
-                out_file << "A=D" << "\n";
-                out_file << "D=M" << "\n";
+                std::string asm_segment;
+                if (segment == "pointer")
+                {
+                    asm_segment = (index == 0) ? "THIS" : "THAT";
+                    out_file << "@" << asm_segment << "\n";
+                    out_file << "D=M" << "\n";
+
+                }
+                else
+                {
+                    asm_segment = m_segment_map[segment];
+                    addSegmentAddressToR14(out_file, asm_segment, index); 
+                    out_file << "A=D" << "\n";
+                    out_file << "D=M" << "\n";
+                }
                 replaceCurrentTopMemWithD(out_file);
                 incrementStackPointer(out_file);
             }
@@ -186,19 +197,27 @@ public:
         }
         else if (command == CommandType::C_POP)
         {
+            std::string asm_segment;
             goToNextValueMem(out_file);
             out_file << "D=M" << "\n";
-            out_file << "@R13" << "\n";
-            out_file << "M=D" << "\n";
-
-            auto asm_segment = m_segment_map[segment];
-            addSegmentAddressToR14(out_file, asm_segment, index);
-
-            out_file << "@R13" << "\n";
-            out_file << "D=M" << "\n";
-            out_file << "@R14" << "\n";
-            out_file << "A=M" << "\n";
-            out_file << "M=D" << "\n";
+            if (segment == "pointer")
+            {
+                asm_segment = (index == 0) ? "THIS" : "THAT";
+                out_file << "@" << asm_segment << "\n";
+                out_file << "M=D" << "\n";
+            }
+            else
+            {
+                out_file << "@R13" << "\n";
+                out_file << "M=D" << "\n";
+                asm_segment = m_segment_map[segment];
+                addSegmentAddressToR14(out_file, asm_segment, index);
+                out_file << "@R13" << "\n";
+                out_file << "D=M" << "\n";
+                out_file << "@R14" << "\n";
+                out_file << "A=M" << "\n";
+                out_file << "M=D" << "\n";
+            }
         }
     }
 
