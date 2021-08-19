@@ -15,9 +15,10 @@ public:
         m_segment_map["that"] = "THAT";
         m_segment_map["temp"] = "TEMP";
 
-        auto pos = name.rfind('.');
-        auto file_name = name.substr(0, pos) + ".asm";
-        out_file.open(file_name);
+        auto dot_pos = name.rfind('.');
+        auto slash_pos = name.rfind('/');
+        m_file_name = name.substr(slash_pos + 1, dot_pos - slash_pos - 1); 
+        out_file.open(name.substr(0,dot_pos) + ".asm");
     }
 
     ~CodeWriter()
@@ -172,6 +173,13 @@ public:
                 incrementStackPointer(out_file);
  
             }
+            else if (segment == "static")
+            {
+                out_file << "@" << m_file_name << "." << m_static_map[index] << "\n";
+                out_file << "D=M" << "\n";
+                replaceCurrentTopMemWithD(out_file);
+                incrementStackPointer(out_file);
+            }
             else
             {
                 std::string asm_segment;
@@ -192,6 +200,7 @@ public:
                 replaceCurrentTopMemWithD(out_file);
                 incrementStackPointer(out_file);
             }
+
            out_file << "// finished pushing: " << segment << " " << std::to_string(index) << "\n\n"; 
 
         }
@@ -204,6 +213,17 @@ public:
             {
                 asm_segment = (index == 0) ? "THIS" : "THAT";
                 out_file << "@" << asm_segment << "\n";
+                out_file << "M=D" << "\n";
+            }
+            else if (segment == "static")
+            {
+                auto var_idx = m_static_map.find(index);
+                if (var_idx == m_static_map.end())
+                {
+                    auto cur_size = m_static_map.size();
+                    m_static_map.insert({index, cur_size});
+                }
+                out_file << "@" << m_file_name << "." << m_static_map[index] << "\n";
                 out_file << "M=D" << "\n";
             }
             else
@@ -279,7 +299,9 @@ private:
         out_file << "@SP" << "\n";
         out_file << "M=M+1" << "\n";
     }
+    std::string m_file_name;
     std::ofstream out_file;
     std::unordered_map<std::string,std::string> m_segment_map;
+    std::unordered_map<int,int> m_static_map;
     uint m_true_count;
 };
