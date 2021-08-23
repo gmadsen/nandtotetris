@@ -221,7 +221,7 @@ public:
                 if (var_idx == m_static_map.end())
                 {
                     auto cur_size = m_static_map.size();
-                    m_static_map.insert({index, cur_size});
+                    m_static_map.insert({index, cur_size});  ///TODO this probably isn't needed
                 }
                 out_file << "@" << m_file_name << "." << m_static_map[index] << "\n";
                 out_file << "M=D" << "\n";
@@ -264,6 +264,134 @@ public:
         out_file << "//finished if goto " + str << "\n\n";
     }
 
+    void writeFunction(std::string name, int n_vars)
+    {
+        out_file << "(" << name << ")" << "\n";
+        for (int i = 0; i < n_vars; i++)
+        {
+            out_file << "push constant 0" << "\n";
+        }
+        out_file << "// finished writing function dec \n\n";
+    }
+
+    void writeCall(std::string name, int n_args)
+    {
+        // how do i know what function I am in?? for return address
+        out_file << "@" << m_file_name << "." << "$ret." << "\n";
+
+        out_file << "D=A" << "\n";
+        replaceCurrentTopMemWithD(out_file);
+        incrementStackPointer(out_file);
+        out_file << "@LCL" << "\n";
+        out_file << "D=A" << "\n";
+        replaceCurrentTopMemWithD(out_file);
+        incrementStackPointer(out_file);
+        out_file << "@ARG" << "\n";
+        out_file << "D=A" << "\n";
+        replaceCurrentTopMemWithD(out_file);
+        incrementStackPointer(out_file);
+        out_file << "@THIS" << "\n";
+        out_file << "D=A" << "\n";
+        replaceCurrentTopMemWithD(out_file);
+        incrementStackPointer(out_file);
+        out_file << "@THAT" << "\n";
+        out_file << "D=A" << "\n";
+        replaceCurrentTopMemWithD(out_file);
+        incrementStackPointer(out_file);
+        auto decrem = 5 - n_args; 
+        out_file << "@SP" << "\n";
+        out_file << "D=M" << "\n";
+        out_file << "@" << decrem << "\n";
+        out_file << "D=D-A" << "\n";
+        out_file << "@ARG" << "\n";
+        out_file << "M=D" << "\n";
+        out_file << "@SP" << "\n";
+        out_file << "D=M" << "\n";
+        out_file << "@LCL" << "\n";
+        out_file << "M=D" << "\n";
+        
+        // goto  function
+        out_file << "@" << name << "\n";
+        out_file << "0;JMP" << "\n";
+
+        out_file << "(" + m_file_name << "." << name << "$ret." << ")" << "\n";
+        out_file << "// finished calling function " << name << "\n\n";
+    }
+
+    void writeReturn()
+    {
+        // R13 := frame
+        // R14 := retAddr
+
+        // put frame in temp
+        write_out("@LCL");
+        write_out("D=M");
+        write_out("@R13");
+        write_out("M=D");
+
+        // put retAddr in R14
+        write_out("@5");
+        write_out("D=A");
+        write_out("@R13");
+        write_out("A=M-D");
+        write_out("D=M");
+        write_out("@R14");
+        write_out("M=D");
+
+        // reassign ARG
+        goToNextValueMem(out_file);
+        write_out("D=M");
+        write_out("@ARG");
+        write_out("M=D");
+
+        // reassign SP
+        write_out("A=A+1");
+        write_out("D=A");
+        write_out("@SP");
+        write_out("M=D");
+
+        // reassign THAT
+        write_out("@1");
+        write_out("D=A");
+        write_out("@R13");
+        write_out("A=M-D");
+        write_out("D=M");
+        write_out("@THAT");
+        write_out("M=A");
+
+        // reassign THIS
+        write_out("@2");
+        write_out("D=A");
+        write_out("@R13");
+        write_out("A=M-D");
+        write_out("D=M");
+        write_out("@THIS");
+        write_out("M=A");
+
+        // reassign ARG 
+        write_out("@3");
+        write_out("D=A");
+        write_out("@R13");
+        write_out("A=M-D");
+        write_out("D=M");
+        write_out("@ARG");
+        write_out("M=A");
+
+        // reassign LCL 
+        write_out("@4");
+        write_out("D=A");
+        write_out("@R13");
+        write_out("A=M-D");
+        write_out("D=M");
+        write_out("@LCL");
+        write_out("M=A");
+
+        // go back
+        write_out("@R14");
+        write_out("0;JMP");
+        write_out("//finished writing function return \n");
+    }
+
     void writeEndLoop()
     {
         out_file << "(END)" << "\n";
@@ -278,6 +406,11 @@ public:
 
 
 private:
+    void write_out(std::string line_str)
+    {
+        out_file << line_str << "\n"; 
+    }
+
     void addSegmentAddressToR14(std::ofstream& out, const std::string& segment, const int index)
     {
            out << "@" << index << "\n";
@@ -325,6 +458,7 @@ private:
     std::string m_file_name;
     std::ofstream out_file;
     std::unordered_map<std::string,std::string> m_segment_map;
+    std::unordered_map<std::string, int> m_function_call_map;
     std::unordered_map<int,int> m_static_map;
     uint m_true_count;
 };

@@ -39,11 +39,10 @@ public:
             {
                 m_writer.writeIf(m_parser.getArgs()[0]);
             }
-            // std::cout << static_cast<uint>(m_parser.getCommandType()) << "\n";
-            // for (const auto& arg : m_parser.getArgs())
-            // {
-            //     std::cout << "arg: " << arg << "\n"; 
-            // }
+            if (m_parser.getCommandType() == CommandType::C_RETURN)
+            {
+                m_writer.writeReturn();
+            }
         }
         m_writer.writeEndLoop();
     }

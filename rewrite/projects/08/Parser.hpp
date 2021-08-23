@@ -49,8 +49,14 @@ public:
 
         std::stringstream s(m_curr_line);
         std::string word;
-        while (s >> word)
+        while ((s >> word) && m_arguments.size() < 2)
         {
+            // check for full args
+            if (m_arguments.size() == 2) 
+            {
+                return;
+            }
+
             if (word.find("//") != std::string::npos)
             {
                 return;
@@ -80,6 +86,21 @@ public:
             {
                 m_command_type = CommandType::C_IF;
                 continue;
+            }
+            else if (word == "function")
+            {
+                m_command_type = CommandType::C_FUNCTION;
+                continue;
+            }
+            else if (word == "call")
+            {
+                m_command_type = CommandType::C_CALL;
+                continue;
+            }
+            else if (word == "return")
+            {
+                m_command_type = CommandType::C_RETURN;
+                return;
             }
             else if (word == "add" || word == "sub" || word == "neg" || word == "eq" || word == "gt" || word == "lt" || word == "and" || word == "or" || word == "not")
             {
