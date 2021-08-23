@@ -269,7 +269,7 @@ public:
         out_file << "(" << name << ")" << "\n";
         for (int i = 0; i < n_vars; i++)
         {
-            out_file << "push constant 0" << "\n";
+           writePushPop(CommandType::C_PUSH, "constant", 0); 
         }
         out_file << "// finished writing function dec \n\n";
     }
@@ -283,19 +283,19 @@ public:
         replaceCurrentTopMemWithD(out_file);
         incrementStackPointer(out_file);
         out_file << "@LCL" << "\n";
-        out_file << "D=A" << "\n";
+        out_file << "D=M" << "\n";
         replaceCurrentTopMemWithD(out_file);
         incrementStackPointer(out_file);
         out_file << "@ARG" << "\n";
-        out_file << "D=A" << "\n";
+        out_file << "D=M" << "\n";
         replaceCurrentTopMemWithD(out_file);
         incrementStackPointer(out_file);
         out_file << "@THIS" << "\n";
-        out_file << "D=A" << "\n";
+        out_file << "D=M" << "\n";
         replaceCurrentTopMemWithD(out_file);
         incrementStackPointer(out_file);
         out_file << "@THAT" << "\n";
-        out_file << "D=A" << "\n";
+        out_file << "D=M" << "\n";
         replaceCurrentTopMemWithD(out_file);
         incrementStackPointer(out_file);
         auto decrem = 5 - n_args; 
@@ -342,6 +342,7 @@ public:
         goToNextValueMem(out_file);
         write_out("D=M");
         write_out("@ARG");
+        write_out("A=M");
         write_out("M=D");
 
         // reassign SP
@@ -357,7 +358,7 @@ public:
         write_out("A=M-D");
         write_out("D=M");
         write_out("@THAT");
-        write_out("M=A");
+        write_out("M=D");
 
         // reassign THIS
         write_out("@2");
@@ -366,7 +367,7 @@ public:
         write_out("A=M-D");
         write_out("D=M");
         write_out("@THIS");
-        write_out("M=A");
+        write_out("M=D");
 
         // reassign ARG 
         write_out("@3");
@@ -375,7 +376,7 @@ public:
         write_out("A=M-D");
         write_out("D=M");
         write_out("@ARG");
-        write_out("M=A");
+        write_out("M=D");
 
         // reassign LCL 
         write_out("@4");
@@ -384,10 +385,11 @@ public:
         write_out("A=M-D");
         write_out("D=M");
         write_out("@LCL");
-        write_out("M=A");
+        write_out("M=D");
 
         // go back
         write_out("@R14");
+        write_out("A=M");
         write_out("0;JMP");
         write_out("//finished writing function return \n");
     }

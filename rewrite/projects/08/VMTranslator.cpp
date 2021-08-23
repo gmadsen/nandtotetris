@@ -39,6 +39,14 @@ public:
             {
                 m_writer.writeIf(m_parser.getArgs()[0]);
             }
+            if (m_parser.getCommandType() == CommandType::C_CALL)
+            {
+                m_writer.writeCall(m_parser.getArgs()[0], stoi(m_parser.getArgs()[1]));
+            }
+            if (m_parser.getCommandType() == CommandType::C_FUNCTION)
+            {
+                m_writer.writeFunction(m_parser.getArgs()[0], stoi(m_parser.getArgs()[1]));
+            }
             if (m_parser.getCommandType() == CommandType::C_RETURN)
             {
                 m_writer.writeReturn();

@@ -1,3 +1,24 @@
+(SimpleFunction.test)
+@0
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// finished pushing: constant 0
+
+@0
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+// finished pushing: constant 0
+
+// finished writing function dec 
+
 @0
 D=A
 @LCL
@@ -118,6 +139,7 @@ M=M-1
 A=M
 D=M
 @ARG
+A=M
 M=D
 A=A+1
 D=A
@@ -129,29 +151,30 @@ D=A
 A=M-D
 D=M
 @THAT
-M=A
+M=D
 @2
 D=A
 @R13
 A=M-D
 D=M
 @THIS
-M=A
+M=D
 @3
 D=A
 @R13
 A=M-D
 D=M
 @ARG
-M=A
+M=D
 @4
 D=A
 @R13
 A=M-D
 D=M
 @LCL
-M=A
+M=D
 @R14
+A=M
 0;JMP
 //finished writing function return 
 
