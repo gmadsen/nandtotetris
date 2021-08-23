@@ -18,6 +18,7 @@ public:
         auto dot_pos = name.rfind('.');
         auto slash_pos = name.rfind('/');
         m_file_name = name.substr(slash_pos + 1, dot_pos - slash_pos - 1); 
+        m_current_function_scope = m_file_name + ".main";
         out_file.open(name.substr(0,dot_pos) + ".asm");
     }
 
@@ -31,291 +32,288 @@ public:
         if (command == "add")
         {
             goToNextValueMem(out_file);
-            out_file << "D=M" << "\n";
+            writeOut("D=M");
             goToNextValueMem(out_file);
-            out_file << "M=M+D" << "\n";
+            writeOut("M=M+D");
             incrementStackPointer(out_file);
-            out_file <<  "// finished adding \n\n"; 
+            writeOut( "// finished adding \n"); 
         }
         else if (command == "sub")
         {
             goToNextValueMem(out_file);
-            out_file << "D=M" << "\n";
+            writeOut("D=M");
             goToNextValueMem(out_file);
-            out_file << "M=M-D" << "\n";
+            writeOut("M=M-D");
             incrementStackPointer(out_file);
-            out_file <<  "// finished substraction \n\n";  
+            writeOut( "// finished substraction \n");  
  
         }
         else if (command == "neg")
         {
             goToNextValueMem(out_file);
-            out_file << "M=-M" << "\n";
+            writeOut("M=-M");
             incrementStackPointer(out_file);
-            out_file << "//finished neg \n\n";
+            writeOut("//finished neg \n");
         }
         else if (command == "eq")
         {
             goToNextValueMem(out_file);
-            out_file << "D=M" << "\n";
+            writeOut("D=M");
             goToNextValueMem(out_file);
-            out_file << "D=M-D" << "\n";
+            writeOut("D=M-D");
             atTrueVar(out_file);
-            out_file << "D;JEQ" << "\n";
+            writeOut("D;JEQ");
 
-            out_file << "//entering false branch \n";
-            out_file << "@0" << "\n";
-            out_file << "D=A" << "\n";
+            writeOut("//entering false branch");
+            writeOut("@0");
+            writeOut("D=A");
             replaceCurrentTopMemWithD(out_file);
             jumpToExitConditionalVar(out_file);
 
-            out_file << "//entering true branch \n";
+            writeOut("//entering true branch");
             addTrueLabel(out_file);
-            out_file << "@0" << "\n";
-            out_file << "D=!A" << "\n";
+            writeOut("@0");
+            writeOut("D=!A");
             replaceCurrentTopMemWithD(out_file);
             addExitConditionalLabel(out_file);
 
             incrementStackPointer(out_file);
-            out_file << "//finished eq \n\n";
+            writeOut("//finished eq \n");
         }
         else if (command == "gt")
         {
             goToNextValueMem(out_file);
-            out_file << "D=M" << "\n";
+            writeOut("D=M");
             goToNextValueMem(out_file);
-            out_file << "D=M-D" << "\n";
+            writeOut("D=M-D");
             atTrueVar(out_file);
-            out_file << "D;JGT" << "\n";
+            writeOut("D;JGT");
 
-            out_file << "//entering false branch \n";
-            out_file << "@0" << "\n";
-            out_file << "D=A" << "\n";
+            writeOut("//entering false branch");
+            writeOut("@0");
+            writeOut("D=A");
             replaceCurrentTopMemWithD(out_file);
             jumpToExitConditionalVar(out_file);
 
-            out_file << "//entering true branch \n";
+            writeOut("//entering true branch");
             addTrueLabel(out_file);
-            out_file << "@0" << "\n";
-            out_file << "D=!A" << "\n";
+            writeOut("@0");
+            writeOut("D=!A");
             replaceCurrentTopMemWithD(out_file);
             addExitConditionalLabel(out_file);
             incrementStackPointer(out_file);
-            out_file << "//finished gt \n\n";
+            writeOut("//finished gt \n");
 
         }
         else if (command == "lt")
         {
             goToNextValueMem(out_file);
-            out_file << "D=M" << "\n";
+            writeOut("D=M");
             goToNextValueMem(out_file);
-            out_file << "D=M-D" << "\n";
+            writeOut("D=M-D");
             atTrueVar(out_file);
-            out_file << "D;JLT" << "\n";
+            writeOut("D;JLT");
 
-            out_file << "//entering false branch \n";
-            out_file << "@0" << "\n";
-            out_file << "D=A" << "\n";
+            writeOut("//entering false branch");
+            writeOut("@0");
+            writeOut("D=A");
             replaceCurrentTopMemWithD(out_file);
             jumpToExitConditionalVar(out_file);
 
-            out_file << "//entering true branch \n";
+            writeOut("//entering true branch");
             addTrueLabel(out_file);
-            out_file << "@0" << "\n";
-            out_file << "D=!A" << "\n";
+            writeOut("@0");
+            writeOut("D=!A");
             replaceCurrentTopMemWithD(out_file);
 
             addExitConditionalLabel(out_file);
             incrementStackPointer(out_file);
-            out_file << "//finished lt \n\n";
+            writeOut("//finished lt \n");
         }
         else if (command == "and")
         {
             goToNextValueMem(out_file);
-            out_file << "D=M" << "\n";
+            writeOut("D=M");
             goToNextValueMem(out_file);
-            out_file << "M=M&D" << "\n";
+            writeOut("M=M&D");
 
             incrementStackPointer(out_file);
-            out_file << "//finished and \n\n";
+            writeOut("//finished and \n");
         }
         else if (command == "or")
         {
             goToNextValueMem(out_file);
-            out_file << "D=M" << "\n";
+            writeOut("D=M");
             goToNextValueMem(out_file);
-            out_file << "M=M|D" << "\n";
+            writeOut("M=M|D");
             incrementStackPointer(out_file);
-            out_file << "//finished or \n\n";
+            writeOut("//finished or \n");
  
         }
         else if (command == "not")
         {
             goToNextValueMem(out_file);
-            out_file << "M=!M" << "\n";
+            writeOut("M=!M");
             incrementStackPointer(out_file);
-            out_file << "//finished not \n\n";
+            writeOut("//finished not \n");
  
         }
 
     }
-
-    void writePushPop(CommandType command, std::string segment, int index)
+    void writePop(std::string segment, int index)
     {
-
-        if (command == CommandType::C_PUSH) 
+        std::string asm_segment;
+        goToNextValueMem(out_file);
+        writeOut("D=M");
+        if (segment == "pointer")
         {
-            if (segment == "constant") 
-            {
-                out_file << "@" << std::to_string(index) << "\n";
-                out_file << "D=A" << "\n"; 
-                replaceCurrentTopMemWithD(out_file);
-                incrementStackPointer(out_file);
- 
-            }
-            else if (segment == "static")
-            {
-                out_file << "@" << m_file_name << "." << m_static_map[index] << "\n";
-                out_file << "D=M" << "\n";
-                replaceCurrentTopMemWithD(out_file);
-                incrementStackPointer(out_file);
-            }
-            else
-            {
-                std::string asm_segment;
-                if (segment == "pointer")
-                {
-                    asm_segment = (index == 0) ? "THIS" : "THAT";
-                    out_file << "@" << asm_segment << "\n";
-                    out_file << "D=M" << "\n";
-
-                }
-                else
-                {
-                    asm_segment = m_segment_map[segment];
-                    addSegmentAddressToR14(out_file, asm_segment, index); 
-                    out_file << "A=D" << "\n";
-                    out_file << "D=M" << "\n";
-                }
-                replaceCurrentTopMemWithD(out_file);
-                incrementStackPointer(out_file);
-            }
-
-           out_file << "// finished pushing: " << segment << " " << std::to_string(index) << "\n\n"; 
-
+            asm_segment = (index == 0) ? "THIS" : "THAT";
+            writeOut("@" + asm_segment);
+            writeOut("M=D");
         }
-        else if (command == CommandType::C_POP)
+        else if (segment == "static")
+        {
+            auto var_idx = m_static_map.find(index);
+            if (var_idx == m_static_map.end())
+            {
+                auto cur_size = m_static_map.size();
+                m_static_map.insert({index, cur_size});  ///TODO this probably isn't needed
+            }
+            writeOut("@" + m_file_name + "." + std::to_string(m_static_map[index]));
+            writeOut("M=D");
+        }
+        else
+        {
+            writeOut("@R13");
+            writeOut("M=D");
+            asm_segment = m_segment_map[segment];
+            addSegmentAddressToR14(out_file, asm_segment, index);
+            writeOut("@R13");
+            writeOut("D=M");
+            writeOut("@R14");
+            writeOut("A=M");
+            writeOut("M=D");
+        }
+        writeOut("// finished popping " + segment + " " + std::to_string(index) +  "\n");
+    }
+    void writePush(std::string segment, int index)
+    {
+        if (segment == "constant") 
+        {
+            writeOut("@" + std::to_string(index));
+            writeOut("D=A");
+            replaceCurrentTopMemWithD(out_file);
+            incrementStackPointer(out_file);
+ 
+        }
+        else if (segment == "static")
+        {
+            writeOut("@" + m_file_name + "." + std::to_string(m_static_map[index]));
+            writeOut("D=M");
+            replaceCurrentTopMemWithD(out_file);
+            incrementStackPointer(out_file);
+        }
+        else
         {
             std::string asm_segment;
-            goToNextValueMem(out_file);
-            out_file << "D=M" << "\n";
             if (segment == "pointer")
             {
                 asm_segment = (index == 0) ? "THIS" : "THAT";
-                out_file << "@" << asm_segment << "\n";
-                out_file << "M=D" << "\n";
-            }
-            else if (segment == "static")
-            {
-                auto var_idx = m_static_map.find(index);
-                if (var_idx == m_static_map.end())
-                {
-                    auto cur_size = m_static_map.size();
-                    m_static_map.insert({index, cur_size});  ///TODO this probably isn't needed
-                }
-                out_file << "@" << m_file_name << "." << m_static_map[index] << "\n";
-                out_file << "M=D" << "\n";
+                writeOut("@" + asm_segment);
+                writeOut("D=M");
+
             }
             else
             {
-                out_file << "@R13" << "\n";
-                out_file << "M=D" << "\n";
                 asm_segment = m_segment_map[segment];
-                addSegmentAddressToR14(out_file, asm_segment, index);
-                out_file << "@R13" << "\n";
-                out_file << "D=M" << "\n";
-                out_file << "@R14" << "\n";
-                out_file << "A=M" << "\n";
-                out_file << "M=D" << "\n";
+                addSegmentAddressToR14(out_file, asm_segment, index); 
+                writeOut("A=D");
+                writeOut("D=M");
             }
-            out_file << "// finished popping " + segment + " " + std::to_string(index) << "\n\n";
+            replaceCurrentTopMemWithD(out_file);
+            incrementStackPointer(out_file);
         }
+        writeOut("// finished pushing: " + segment + " " + std::to_string(index) + "\n"); 
     }
 
     void writeLabel(std::string str)
     {
-        out_file << "(" + m_file_name + "$" + str + ")" << "\n";
-        out_file << "// finished label " + str << "\n\n";
+        writeOut("(" + m_current_function_scope + "$" + str + ")");
+        writeOut("// finished label " + str + "\n");
     }
 
     void writeGoto(std::string str)
     {
-        out_file << "@" << m_file_name + '$' + str  << "\n";
-        out_file << "0;JMP" << "\n";
-        out_file << "//finished goto label " + str << "\n\n";
+        writeOut("@" + m_current_function_scope + '$' + str);
+        writeOut("0;JMP");
+        writeOut("//finished goto label " + m_current_function_scope + "$" + str + "\n");
     }
 
     void writeIf(std::string str)
     {
         goToNextValueMem(out_file);
-        out_file << "D=M" << "\n";
-        out_file << "@" << m_file_name + '$' + str << "\n";
-        out_file << "D;JNE" << "\n"; 
-        out_file << "//finished if goto " + str << "\n\n";
+        writeOut("D=M");
+        writeOut("@" + m_current_function_scope + '$' + str);
+        writeOut("D;JNE");
+        writeOut("//finished if goto " + m_current_function_scope + "$" + str + "\n");
     }
 
     void writeFunction(std::string name, int n_vars)
     {
-        out_file << "(" << name << ")" << "\n";
+        writeOut("(" + name + ")");
         for (int i = 0; i < n_vars; i++)
         {
-           writePushPop(CommandType::C_PUSH, "constant", 0); 
+           writePush("constant", 0); 
         }
-        out_file << "// finished writing function dec \n\n";
+        m_current_function_scope = name;
+        m_function_call_map[name] = 0;
+        writeOut("// finished writing function dec \n");
     }
 
     void writeCall(std::string name, int n_args)
     {
         // how do i know what function I am in?? for return address
-        out_file << "@" << m_file_name << "." << "$ret." << "\n";
+        auto return_label = m_current_function_scope + "$ret" + std::to_string(m_function_call_map[m_current_function_scope]);
+        writeOut("@" + return_label);
 
-        out_file << "D=A" << "\n";
+        writeOut("D=A");
         replaceCurrentTopMemWithD(out_file);
         incrementStackPointer(out_file);
-        out_file << "@LCL" << "\n";
-        out_file << "D=M" << "\n";
+        writeOut("@LCL");
+        writeOut("D=M");
         replaceCurrentTopMemWithD(out_file);
         incrementStackPointer(out_file);
-        out_file << "@ARG" << "\n";
-        out_file << "D=M" << "\n";
+        writeOut("@ARG");
+        writeOut("D=M");
         replaceCurrentTopMemWithD(out_file);
         incrementStackPointer(out_file);
-        out_file << "@THIS" << "\n";
-        out_file << "D=M" << "\n";
+        writeOut("@THIS");
+        writeOut("D=M");
         replaceCurrentTopMemWithD(out_file);
         incrementStackPointer(out_file);
-        out_file << "@THAT" << "\n";
-        out_file << "D=M" << "\n";
+        writeOut("@THAT");
+        writeOut("D=M");
         replaceCurrentTopMemWithD(out_file);
         incrementStackPointer(out_file);
         auto decrem = 5 - n_args; 
-        out_file << "@SP" << "\n";
-        out_file << "D=M" << "\n";
-        out_file << "@" << decrem << "\n";
-        out_file << "D=D-A" << "\n";
-        out_file << "@ARG" << "\n";
-        out_file << "M=D" << "\n";
-        out_file << "@SP" << "\n";
-        out_file << "D=M" << "\n";
-        out_file << "@LCL" << "\n";
-        out_file << "M=D" << "\n";
+        writeOut("@SP");
+        writeOut("D=M");
+        writeOut("@" + std::to_string(decrem));
+        writeOut("D=D-A"); 
+        writeOut("@ARG");
+        writeOut("M=D");
+        writeOut("@SP");
+        writeOut("D=M");
+        writeOut("@LCL");
+        writeOut("M=D");
         
         // goto  function
-        out_file << "@" << name << "\n";
-        out_file << "0;JMP" << "\n";
+        writeOut("@" + name);
+        writeOut("0;JMP");
 
-        out_file << "(" + m_file_name << "." << name << "$ret." << ")" << "\n";
-        out_file << "// finished calling function " << name << "\n\n";
+        writeOut("(" + return_label +  ")");
+        m_function_call_map[m_current_function_scope] += 1;
+        writeOut("// finished calling function " + m_current_function_scope + "\n");
     }
 
     void writeReturn()
@@ -324,81 +322,81 @@ public:
         // R14 := retAddr
 
         // put frame in temp
-        write_out("@LCL");
-        write_out("D=M");
-        write_out("@R13");
-        write_out("M=D");
+        writeOut("@LCL");
+        writeOut("D=M");
+        writeOut("@R13");
+        writeOut("M=D");
 
         // put retAddr in R14
-        write_out("@5");
-        write_out("D=A");
-        write_out("@R13");
-        write_out("A=M-D");
-        write_out("D=M");
-        write_out("@R14");
-        write_out("M=D");
+        writeOut("@5");
+        writeOut("D=A");
+        writeOut("@R13");
+        writeOut("A=M-D");
+        writeOut("D=M");
+        writeOut("@R14");
+        writeOut("M=D");
 
         // reassign ARG
         goToNextValueMem(out_file);
-        write_out("D=M");
-        write_out("@ARG");
-        write_out("A=M");
-        write_out("M=D");
+        writeOut("D=M");
+        writeOut("@ARG");
+        writeOut("A=M");
+        writeOut("M=D");
 
         // reassign SP
-        write_out("A=A+1");
-        write_out("D=A");
-        write_out("@SP");
-        write_out("M=D");
+        writeOut("A=A+1");
+        writeOut("D=A");
+        writeOut("@SP");
+        writeOut("M=D");
 
         // reassign THAT
-        write_out("@1");
-        write_out("D=A");
-        write_out("@R13");
-        write_out("A=M-D");
-        write_out("D=M");
-        write_out("@THAT");
-        write_out("M=D");
+        writeOut("@1");
+        writeOut("D=A");
+        writeOut("@R13");
+        writeOut("A=M-D");
+        writeOut("D=M");
+        writeOut("@THAT");
+        writeOut("M=D");
 
         // reassign THIS
-        write_out("@2");
-        write_out("D=A");
-        write_out("@R13");
-        write_out("A=M-D");
-        write_out("D=M");
-        write_out("@THIS");
-        write_out("M=D");
+        writeOut("@2");
+        writeOut("D=A");
+        writeOut("@R13");
+        writeOut("A=M-D");
+        writeOut("D=M");
+        writeOut("@THIS");
+        writeOut("M=D");
 
         // reassign ARG 
-        write_out("@3");
-        write_out("D=A");
-        write_out("@R13");
-        write_out("A=M-D");
-        write_out("D=M");
-        write_out("@ARG");
-        write_out("M=D");
+        writeOut("@3");
+        writeOut("D=A");
+        writeOut("@R13");
+        writeOut("A=M-D");
+        writeOut("D=M");
+        writeOut("@ARG");
+        writeOut("M=D");
 
         // reassign LCL 
-        write_out("@4");
-        write_out("D=A");
-        write_out("@R13");
-        write_out("A=M-D");
-        write_out("D=M");
-        write_out("@LCL");
-        write_out("M=D");
+        writeOut("@4");
+        writeOut("D=A");
+        writeOut("@R13");
+        writeOut("A=M-D");
+        writeOut("D=M");
+        writeOut("@LCL");
+        writeOut("M=D");
 
         // go back
-        write_out("@R14");
-        write_out("A=M");
-        write_out("0;JMP");
-        write_out("//finished writing function return \n");
+        writeOut("@R14");
+        writeOut("A=M");
+        writeOut("0;JMP");
+        writeOut("//finished writing function return " + m_current_function_scope + "\n");
     }
 
     void writeEndLoop()
     {
-        out_file << "(END)" << "\n";
-        out_file << "@END" << "\n";
-        out_file << "0;JMP" << "\n";
+        writeOut("(END)");
+        writeOut("@END");
+        writeOut("0;JMP");
     }
 
     void close()
@@ -408,59 +406,62 @@ public:
 
 
 private:
-    void write_out(std::string line_str)
-    {
-        out_file << line_str << "\n"; 
-    }
+
 
     void addSegmentAddressToR14(std::ofstream& out, const std::string& segment, const int index)
     {
-           out << "@" << index << "\n";
-           out << "D=A" << "\n";
-           out << "@" << segment << "\n";
-           out << "D=M+D" << "\n";
-           out << "@R14" << "\n";
-           out << "M=D" << "\n";
+           writeOut("@" + std::to_string(index));
+           writeOut("D=A");
+           writeOut("@" + segment);
+           writeOut("D=M+D");
+           writeOut("@R14");
+           writeOut("M=D");
     }
     void atTrueVar(std::ofstream& out)
     {
-        out_file << "@TRUE_VALUE_" << std::to_string(m_true_count) << "\n";
+        writeOut("@TRUE_VALUE_" + std::to_string(m_true_count));
     }
     void addTrueLabel(std::ofstream& out)
     {
-        out_file << "(TRUE_VALUE_" << std::to_string(m_true_count) << ")" << "\n";
+        writeOut("(TRUE_VALUE_" + std::to_string(m_true_count) + ")");
     }
     void jumpToExitConditionalVar(std::ofstream& out)
     {
-        out_file << "@EXIT_CONDITIONAL_" << std::to_string(m_true_count) << "\n";
-        out_file << "0;JMP" << "\n";
+        writeOut("@EXIT_CONDITIONAL_" + std::to_string(m_true_count));
+        writeOut("0;JMP");
     }
     void addExitConditionalLabel(std::ofstream& out)
     {
-        out_file << "(EXIT_CONDITIONAL_" << std::to_string(m_true_count) << ")" << "\n";
+        writeOut("(EXIT_CONDITIONAL_" + std::to_string(m_true_count) + ")");
         m_true_count++;
     }
     void goToNextValueMem(std::ofstream& out)  
     {
-        out_file << "@SP" << "\n";
-        out_file << "M=M-1" << "\n";
-        out_file << "A=M" << "\n";
+        writeOut("@SP");
+        writeOut("M=M-1");
+        writeOut("A=M");
     }
     void replaceCurrentTopMemWithD(std::ofstream& out)
     {
-        out_file << "@SP" << "\n";
-        out_file << "A=M" << "\n";
-        out_file << "M=D" << "\n";
+        writeOut("@SP");
+        writeOut("A=M");
+        writeOut("M=D");
     }
     void incrementStackPointer(std::ofstream& out)
     {
-        out_file << "@SP" << "\n";
-        out_file << "M=M+1" << "\n";
+        writeOut("@SP");
+        writeOut("M=M+1");
     }
+    void writeOut(std::string line_str)
+    {
+        out_file << line_str << "\n"; 
+    }
+
     std::string m_file_name;
     std::ofstream out_file;
     std::unordered_map<std::string,std::string> m_segment_map;
     std::unordered_map<std::string, int> m_function_call_map;
     std::unordered_map<int,int> m_static_map;
     uint m_true_count;
+    std::string m_current_function_scope;
 };

@@ -132,7 +132,7 @@ A=M
 M=D
 // finished popping argument 0
 
-(FibonacciSeries$MAIN_LOOP_START)
+(FibonacciSeries.main$MAIN_LOOP_START)
 // finished label MAIN_LOOP_START
 
 @0
@@ -154,15 +154,15 @@ M=M+1
 M=M-1
 A=M
 D=M
-@FibonacciSeries$COMPUTE_ELEMENT
+@FibonacciSeries.main$COMPUTE_ELEMENT
 D;JNE
-//finished if goto COMPUTE_ELEMENT
+//finished if goto FibonacciSeries.main$COMPUTE_ELEMENT
 
-@FibonacciSeries$END_PROGRAM
+@FibonacciSeries.main$END_PROGRAM
 0;JMP
-//finished goto label END_PROGRAM
+//finished goto label FibonacciSeries.main$END_PROGRAM
 
-(FibonacciSeries$COMPUTE_ELEMENT)
+(FibonacciSeries.main$COMPUTE_ELEMENT)
 // finished label COMPUTE_ELEMENT
 
 @0
@@ -319,11 +319,11 @@ A=M
 M=D
 // finished popping argument 0
 
-@FibonacciSeries$MAIN_LOOP_START
+@FibonacciSeries.main$MAIN_LOOP_START
 0;JMP
-//finished goto label MAIN_LOOP_START
+//finished goto label FibonacciSeries.main$MAIN_LOOP_START
 
-(FibonacciSeries$END_PROGRAM)
+(FibonacciSeries.main$END_PROGRAM)
 // finished label END_PROGRAM
 
 (END)

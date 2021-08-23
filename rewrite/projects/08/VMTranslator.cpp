@@ -17,14 +17,16 @@ public:
         while (m_parser.hasMoreLines())
         {
             m_parser.advanced();
-            if (m_parser.getCommandType() == CommandType::C_PUSH || m_parser.getCommandType() == CommandType::C_POP)
+            if (m_parser.getCommandType() == CommandType::C_PUSH) 
             {
-                assert(m_parser.getArgs().size() == 2);
-                m_writer.writePushPop(m_parser.getCommandType(), m_parser.getArgs()[0], stoi(m_parser.getArgs()[1]));
+                m_writer.writePush(m_parser.getArgs()[0], stoi(m_parser.getArgs()[1]));
+            }
+            if (m_parser.getCommandType() == CommandType::C_POP)
+            {
+                m_writer.writePop(m_parser.getArgs()[0], stoi(m_parser.getArgs()[1]));
             }
             if (m_parser.getCommandType() == CommandType::C_ARITHMETIC)
             {
-                assert(m_parser.getArgs().size() == 1);
                 m_writer.writeArithmetic(m_parser.getArgs()[0]);
             }
             if (m_parser.getCommandType() == CommandType::C_LABEL)

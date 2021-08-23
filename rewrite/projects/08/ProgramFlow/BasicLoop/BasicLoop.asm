@@ -26,7 +26,7 @@ A=M
 M=D
 // finished popping local 0
 
-(BasicLoop$LOOP_START)
+(BasicLoop.main$LOOP_START)
 // finished label LOOP_START
 
 @0
@@ -164,9 +164,9 @@ M=M+1
 M=M-1
 A=M
 D=M
-@BasicLoop$LOOP_START
+@BasicLoop.main$LOOP_START
 D;JNE
-//finished if goto LOOP_START
+//finished if goto BasicLoop.main$LOOP_START
 
 @0
 D=A

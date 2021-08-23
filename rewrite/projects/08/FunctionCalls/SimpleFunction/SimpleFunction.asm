@@ -176,7 +176,7 @@ M=D
 @R14
 A=M
 0;JMP
-//finished writing function return 
+//finished writing function return SimpleFunction.test
 
 (END)
 @END
