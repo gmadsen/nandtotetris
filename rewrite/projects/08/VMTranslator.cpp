@@ -1,5 +1,19 @@
 #include "CodeWriter.hpp"
 #include <cassert>
+#include <experimental/filesystem>
+#include <string_view>
+#include <algorithm>
+namespace fs = std::experimental::filesystem;
+
+static bool endsWith(std::string_view str, std::string_view suffix)
+{
+    return str.size() >= suffix.size() && 0 == str.compare(str.size()-suffix.size(), suffix.size(), suffix);
+}
+
+static bool startsWith(std::string_view str, std::string_view prefix)
+{
+    return str.size() >= prefix.size() && 0 == str.compare(0, prefix.size(), prefix);
+}
 
 
 class VMTranslator
@@ -63,11 +77,49 @@ private:
 
 int main(int argc, char** argv)
 {
-    Parser parser(argv[1]); 
-    CodeWriter writer(argv[1]);
-    VMTranslator translator(parser, writer);
-    translator.translate();
-
+    const fs::path path(argv[1]); // Constructing the path from a string is possible.
+    std::error_code ec; // For using the non-throwing overloads of functions below.
+    if (fs::is_directory(path, ec))
+    { 
+        // Process a directory.
+        std::cout << "is a directory \n";
+        std::vector<std::string> file_vector;
+        //file_vector.front().find("Sys.vm");
+        fs::directory_entry dir(argv[1]);
+        for (auto const & p : fs::directory_iterator(path))
+        {
+            std::string file_string(p.path());
+            //std::cout << "value of file_string: " << p << "\n";
+            if (endsWith(file_string, ".vm") )
+            {
+                file_vector.push_back(file_string);
+            }
+        }
+        //auto init = std::end(file_vector);
+        auto init = std::find_if(std::begin(file_vector), std::end(file_vector), [](const std::string& a) {return a.find("Sys.vm") != std::string::npos;});
+        if (init != std::end(file_vector))
+        {
+            std::iter_swap(std::begin(file_vector), init);
+        }
+        // TODO handle all files, now that sys.vm is first to be translated
+    }
+    if (ec) // Optional handling of possible errors.
+    {
+        std::cerr << "Error in is_directory: " << ec.message();
+    }
+    if (fs::is_regular_file(path, ec))
+    {
+        // Process a regular file.
+        std::cout << "is a regular file \n";
+        Parser parser(argv[1]); 
+        CodeWriter writer(argv[1]);
+        VMTranslator translator(parser, writer);
+        translator.translate();
+    }
+    if (ec) // Optional handling of possible errors. Usage of the same ec object works since fs functions are calling ec.clear() if no errors occur.
+    {
+        std::cerr << "Error in is_regular_file: " << ec.message();
+    }
     return 0;
 
 }

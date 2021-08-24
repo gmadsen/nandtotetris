@@ -433,20 +433,20 @@ private:
     }
     void atTrueVar(std::ofstream& out)
     {
-        writeOut("@TRUE_VALUE_" + std::to_string(m_true_count));
+        writeOut("@" + m_file_name + "_TRUE_VALUE_" + std::to_string(m_true_count));
     }
     void addTrueLabel(std::ofstream& out)
     {
-        writeOut("(TRUE_VALUE_" + std::to_string(m_true_count) + ")");
+        writeOut("(" + m_file_name + "_TRUE_VALUE_" + std::to_string(m_true_count) + ")");
     }
     void jumpToExitConditionalVar(std::ofstream& out)
     {
-        writeOut("@EXIT_CONDITIONAL_" + std::to_string(m_true_count));
+        writeOut("@" + m_file_name + "_EXIT_CONDITIONAL_" + std::to_string(m_true_count));
         writeOut("0;JMP");
     }
     void addExitConditionalLabel(std::ofstream& out)
     {
-        writeOut("(EXIT_CONDITIONAL_" + std::to_string(m_true_count) + ")");
+        writeOut("(" + m_file_name + "_EXIT_CONDITIONAL_" + std::to_string(m_true_count) + ")");
         m_true_count++;
     }
     void goToNextValueMem(std::ofstream& out)  
