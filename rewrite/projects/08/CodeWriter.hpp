@@ -272,30 +272,33 @@ public:
 
     void writeCall(std::string name, int n_args)
     {
-        // how do i know what function I am in?? for return address
         auto return_label = m_current_function_scope + "$ret" + std::to_string(m_function_call_map[m_current_function_scope]);
         writeOut("@" + return_label);
-
         writeOut("D=A");
         replaceCurrentTopMemWithD(out_file);
         incrementStackPointer(out_file);
+
         writeOut("@LCL");
         writeOut("D=M");
         replaceCurrentTopMemWithD(out_file);
         incrementStackPointer(out_file);
+
         writeOut("@ARG");
         writeOut("D=M");
         replaceCurrentTopMemWithD(out_file);
         incrementStackPointer(out_file);
+
         writeOut("@THIS");
         writeOut("D=M");
         replaceCurrentTopMemWithD(out_file);
         incrementStackPointer(out_file);
+
         writeOut("@THAT");
         writeOut("D=M");
         replaceCurrentTopMemWithD(out_file);
         incrementStackPointer(out_file);
-        auto decrem = 5 - n_args; 
+
+        auto decrem = 5 + n_args; 
         writeOut("@SP");
         writeOut("D=M");
         writeOut("@" + std::to_string(decrem));
@@ -310,10 +313,11 @@ public:
         // goto  function
         writeOut("@" + name);
         writeOut("0;JMP");
+        writeOut("// jump to function " + name + "\n");
 
         writeOut("(" + return_label +  ")");
         m_function_call_map[m_current_function_scope] += 1;
-        writeOut("// finished calling function " + m_current_function_scope + "\n");
+        writeOut("// finished calling function " + name + "\n");
     }
 
     void writeReturn()
@@ -403,11 +407,7 @@ public:
     {
         return;
     }
-
-
 private:
-
-
     void addSegmentAddressToR14(std::ofstream& out, const std::string& segment, const int index)
     {
            writeOut("@" + std::to_string(index));
@@ -451,6 +451,7 @@ private:
     {
         writeOut("@SP");
         writeOut("M=M+1");
+        writeOut("//increment SP");
     }
     void writeOut(std::string line_str)
     {

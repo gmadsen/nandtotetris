@@ -8,6 +8,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 // finished pushing: constant 4000
 
 @SP
@@ -25,6 +26,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 // finished pushing: constant 5000
 
 @SP
@@ -42,6 +44,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 @LCL
 D=M
 @SP
@@ -49,6 +52,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 @ARG
 D=M
 @SP
@@ -56,6 +60,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 @THIS
 D=M
 @SP
@@ -63,6 +68,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 @THAT
 D=M
 @SP
@@ -70,6 +76,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 @SP
 D=M
 @5
@@ -82,8 +89,10 @@ D=M
 M=D
 @Sys.main
 0;JMP
+// jump to function Sys.main
+
 (Sys.init$ret0)
-// finished calling function Sys.init
+// finished calling function Sys.main
 
 @SP
 M=M-1
@@ -119,6 +128,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 // finished pushing: constant 0
 
 @0
@@ -128,6 +138,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 // finished pushing: constant 0
 
 @0
@@ -137,6 +148,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 // finished pushing: constant 0
 
 @0
@@ -146,6 +158,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 // finished pushing: constant 0
 
 @0
@@ -155,6 +168,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 // finished pushing: constant 0
 
 // finished writing function dec 
@@ -166,6 +180,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 // finished pushing: constant 4001
 
 @SP
@@ -183,6 +198,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 // finished pushing: constant 5001
 
 @SP
@@ -200,6 +216,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 // finished pushing: constant 200
 
 @SP
@@ -228,6 +245,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 // finished pushing: constant 40
 
 @SP
@@ -256,6 +274,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 // finished pushing: constant 6
 
 @SP
@@ -284,6 +303,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 // finished pushing: constant 123
 
 @Sys.main$ret0
@@ -293,6 +313,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 @LCL
 D=M
 @SP
@@ -300,6 +321,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 @ARG
 D=M
 @SP
@@ -307,6 +329,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 @THIS
 D=M
 @SP
@@ -314,6 +337,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 @THAT
 D=M
 @SP
@@ -321,9 +345,10 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 @SP
 D=M
-@4
+@6
 D=D-A
 @ARG
 M=D
@@ -333,8 +358,10 @@ D=M
 M=D
 @Sys.add12
 0;JMP
+// jump to function Sys.add12
+
 (Sys.main$ret0)
-// finished calling function Sys.main
+// finished calling function Sys.add12
 
 @SP
 M=M-1
@@ -368,6 +395,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 // finished pushing: local 0
 
 @1
@@ -383,6 +411,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 // finished pushing: local 1
 
 @2
@@ -398,6 +427,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 // finished pushing: local 2
 
 @3
@@ -413,6 +443,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 // finished pushing: local 3
 
 @4
@@ -428,6 +459,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 // finished pushing: local 4
 
 @SP
@@ -440,6 +472,7 @@ A=M
 M=M+D
 @SP
 M=M+1
+//increment SP
 // finished adding 
 
 @SP
@@ -452,6 +485,7 @@ A=M
 M=M+D
 @SP
 M=M+1
+//increment SP
 // finished adding 
 
 @SP
@@ -464,6 +498,7 @@ A=M
 M=M+D
 @SP
 M=M+1
+//increment SP
 // finished adding 
 
 @SP
@@ -476,6 +511,7 @@ A=M
 M=M+D
 @SP
 M=M+1
+//increment SP
 // finished adding 
 
 @LCL
@@ -543,6 +579,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 // finished pushing: constant 4002
 
 @SP
@@ -560,6 +597,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 // finished pushing: constant 5002
 
 @SP
@@ -583,6 +621,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 // finished pushing: argument 0
 
 @12
@@ -592,6 +631,7 @@ A=M
 M=D
 @SP
 M=M+1
+//increment SP
 // finished pushing: constant 12
 
 @SP
@@ -604,6 +644,7 @@ A=M
 M=M+D
 @SP
 M=M+1
+//increment SP
 // finished adding 
 
 @LCL
