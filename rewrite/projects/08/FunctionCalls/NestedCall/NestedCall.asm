@@ -98,18 +98,7 @@ M=D
 M=M-1
 A=M
 D=M
-@R13
-M=D
-@1
-D=A
-@TEMP
-D=M+D
-@R14
-M=D
-@R13
-D=M
-@R14
-A=M
+@6
 M=D
 // finished popping temp 1
 
@@ -367,18 +356,7 @@ M=D
 M=M-1
 A=M
 D=M
-@R13
-M=D
-@0
-D=A
-@TEMP
-D=M+D
-@R14
-M=D
-@R13
-D=M
-@R14
-A=M
+@5
 M=D
 // finished popping temp 0
 
@@ -532,8 +510,7 @@ D=M
 @ARG
 A=M
 M=D
-A=A+1
-D=A
+D=A+1
 @SP
 M=D
 @1
@@ -665,8 +642,7 @@ D=M
 @ARG
 A=M
 M=D
-A=A+1
-D=A
+D=A+1
 @SP
 M=D
 @1

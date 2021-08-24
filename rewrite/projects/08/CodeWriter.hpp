@@ -13,7 +13,6 @@ public:
         m_segment_map["argument"] = "ARG";
         m_segment_map["this"] = "THIS";
         m_segment_map["that"] = "THAT";
-        m_segment_map["temp"] = "TEMP";
 
         auto dot_pos = name.rfind('.');
         auto slash_pos = name.rfind('/');
@@ -182,6 +181,13 @@ public:
             writeOut("@" + m_file_name + "." + std::to_string(m_static_map[index]));
             writeOut("M=D");
         }
+        else if (segment == "temp")
+        {
+            int base = 5;
+            int temp_address = base + index;
+            writeOut("@" + std::to_string(temp_address));
+            writeOut("M=D");
+        }
         else
         {
             writeOut("@R13");
@@ -209,6 +215,15 @@ public:
         else if (segment == "static")
         {
             writeOut("@" + m_file_name + "." + std::to_string(m_static_map[index]));
+            writeOut("D=M");
+            replaceCurrentTopMemWithD(out_file);
+            incrementStackPointer(out_file);
+        }
+        else if (segment == "temp")
+        {
+            int base = 5;
+            int temp_address = base + index;
+            writeOut("@" + std::to_string(temp_address));
             writeOut("D=M");
             replaceCurrentTopMemWithD(out_file);
             incrementStackPointer(out_file);
@@ -348,8 +363,7 @@ public:
         writeOut("M=D");
 
         // reassign SP
-        writeOut("A=A+1");
-        writeOut("D=A");
+        writeOut("D=A+1");
         writeOut("@SP");
         writeOut("M=D");
 
