@@ -29,7 +29,12 @@ public:
         m_in_file.open(in_file);
         m_arguments.reserve(2);
     }
-    ~Parser()
+    Parser(std::string in_file)
+    {
+        m_in_file.open(in_file);
+        m_arguments.reserve(2);
+    }
+~Parser()
     {
         m_in_file.close();
     }

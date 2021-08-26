@@ -13,6 +13,8 @@ A=M
 D=M
 @THIS
 M=D
+// finished popping pointer 0
+
 @3040
 D=A
 @SP
@@ -28,6 +30,8 @@ A=M
 D=M
 @THAT
 M=D
+// finished popping pointer 1
+
 @32
 D=A
 @SP
@@ -54,6 +58,8 @@ D=M
 @R14
 A=M
 M=D
+// finished popping this 2
+
 @46
 D=A
 @SP
@@ -80,6 +86,8 @@ D=M
 @R14
 A=M
 M=D
+// finished popping that 6
+
 @THIS
 D=M
 @SP

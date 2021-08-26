@@ -21,7 +21,7 @@ class VMTranslator
 public:
     VMTranslator(Parser& parser, CodeWriter& writer) : m_parser(parser), m_writer(writer) 
     {
-
+        m_writer.writeBootStrap();
     }
 
 
@@ -81,26 +81,39 @@ int main(int argc, char** argv)
     std::error_code ec; // For using the non-throwing overloads of functions below.
     if (fs::is_directory(path, ec))
     { 
-        // Process a directory.
         std::cout << "is a directory \n";
         std::vector<std::string> file_vector;
-        //file_vector.front().find("Sys.vm");
         fs::directory_entry dir(argv[1]);
         for (auto const & p : fs::directory_iterator(path))
         {
             std::string file_string(p.path());
-            //std::cout << "value of file_string: " << p << "\n";
             if (endsWith(file_string, ".vm") )
             {
                 file_vector.push_back(file_string);
             }
         }
-        //auto init = std::end(file_vector);
-        auto init = std::find_if(std::begin(file_vector), std::end(file_vector), [](const std::string& a) {return a.find("Sys.vm") != std::string::npos;});
-        if (init != std::end(file_vector))
+        bool append_flag = false;
+        for (int i = 0; i < file_vector.size(); i++)
         {
-            std::iter_swap(std::begin(file_vector), init);
+            if (i > 0)
+            {
+                append_flag = true;
+            } 
+            auto& file = file_vector[i];
+            std::string source_name(*std::prev(path.end()));
+            source_name = "/" + source_name;
+            Parser parser(file);
+
+            CodeWriter writer(file, argv[1] + source_name, append_flag);
+            VMTranslator translator(parser, writer);
+            translator.translate();
         }
+        // auto init = std::find_if(std::begin(file_vector), std::end(file_vector), [](const std::string& a) {return a.find("Sys.vm") != std::string::npos;});
+        // if (init != std::end(file_vector))
+        // {
+        //     std::iter_swap(std::begin(file_vector), init);
+        // }
+        // PUTTING sys.init first is not needed, just boot strap in ctor
         // TODO handle all files, now that sys.vm is first to be translated
     }
     if (ec) // Optional handling of possible errors.

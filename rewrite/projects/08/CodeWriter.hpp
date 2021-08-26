@@ -7,7 +7,7 @@
 class CodeWriter
 {
 public:
-    CodeWriter(std::string name) 
+    CodeWriter(std::string name) : m_true_count(0) 
     {
         m_segment_map["local"] = "LCL";
         m_segment_map["argument"] = "ARG";
@@ -19,6 +19,27 @@ public:
         m_file_name = name.substr(slash_pos + 1, dot_pos - slash_pos - 1); 
         m_current_function_scope = m_file_name + ".main";
         out_file.open(name.substr(0,dot_pos) + ".asm");
+    }
+    CodeWriter(std::string name, std::string dir_name, bool append_to_source) : m_true_count(0)
+    {
+        m_segment_map["local"] = "LCL";
+        m_segment_map["argument"] = "ARG";
+        m_segment_map["this"] = "THIS";
+        m_segment_map["that"] = "THAT";
+
+        auto dot_pos = name.rfind('.');
+        auto slash_pos = name.rfind('/');
+        m_file_name = name.substr(slash_pos + 1, dot_pos - slash_pos - 1); 
+        m_current_function_scope = m_file_name + ".main";
+        const std::string out_file_name = dir_name + ".asm";
+        if (append_to_source)
+        {
+            out_file.open(out_file_name, std::ios_base::app);
+        }
+        else
+        {
+            out_file.open(out_file_name);
+        }
     }
 
     ~CodeWriter()
@@ -415,6 +436,15 @@ public:
         writeOut("(END)");
         writeOut("@END");
         writeOut("0;JMP");
+    }
+    void writeBootStrap()
+    {
+        writeOut("// BootStrapping ROM to sys.init");
+        writeOut("@256");
+        writeOut("D=A");
+        writeOut("@SP");
+        writeOut("M=D");
+        writeCall("Sys.init", 0);
     }
 
     void close()

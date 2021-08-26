@@ -31,18 +31,24 @@ A=M
 D=M
 @StaticTest.0
 M=D
+// finished popping static 8
+
 @SP
 M=M-1
 A=M
 D=M
 @StaticTest.1
 M=D
+// finished popping static 3
+
 @SP
 M=M-1
 A=M
 D=M
 @StaticTest.2
 M=D
+// finished popping static 1
+
 @StaticTest.1
 D=M
 @SP
