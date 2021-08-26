@@ -81,7 +81,6 @@ int main(int argc, char** argv)
     std::error_code ec; // For using the non-throwing overloads of functions below.
     if (fs::is_directory(path, ec))
     { 
-        std::cout << "is a directory \n";
         std::vector<std::string> file_vector;
         fs::directory_entry dir(argv[1]);
         for (auto const & p : fs::directory_iterator(path))
@@ -123,7 +122,6 @@ int main(int argc, char** argv)
     if (fs::is_regular_file(path, ec))
     {
         // Process a regular file.
-        std::cout << "is a regular file \n";
         Parser parser(argv[1]); 
         CodeWriter writer(argv[1]);
         VMTranslator translator(parser, writer);
