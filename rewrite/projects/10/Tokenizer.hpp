@@ -43,7 +43,7 @@ class Tokenizer
 public:
     Tokenizer(char* in_file) 
     {
-        m_in_file.open(in_file)
+        m_in_file.open(in_file);
         createTokens();
 
     }
@@ -80,9 +80,19 @@ public:
         return "yp";
     }
 private:
+    struct TokenTypeStrings
+    {
+       static constexpr const char* KEYWORD          = "keyword";
+       static constexpr const char* SYMBOL           = "symbol"; 
+       static constexpr const char* INT_CONST        = "intConst"; 
+       static constexpr const char* STR_CONST        = "stringConst"; 
+       static constexpr const char* IDENTIFIER       = "identifier"; 
+    };
+
     void createTokens()
     {
        typedef std::istreambuf_iterator<char> buf_itr;
+       std::string temp;
        for (buf_itr i(m_in_file), e; i != e; i++)
        {
 

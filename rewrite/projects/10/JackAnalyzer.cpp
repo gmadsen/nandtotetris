@@ -32,7 +32,7 @@ int main(int argc, char** argv)
 {
 
 
-    Tokenizer tokenizer;
+    Tokenizer tokenizer(argv[1]);
     CompilationEngine engine;
     JackAnalyzer analyzer(tokenizer, engine);
     analyzer.analyze();
