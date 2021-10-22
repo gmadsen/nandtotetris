@@ -92,14 +92,30 @@ private:
     void createTokens()
     {
        typedef std::istreambuf_iterator<char> buf_itr;
+       const char new_line = '\n';
+       const std::string COMMENT_SYM = "\\";
        std::string temp;
        for (buf_itr i(m_in_file), e; i != e; i++)
        {
-
+           if (temp == COMMENT_SYM)
+           {
+               if (*i == '\n')
+               {
+                   temp.clear();
+               }
+               continue;
+           }
+           // comments do not invalidate strings
+           if (*i == '/')
+           {
+               temp.push_back('/');
+               continue;
+           }
        }
     }
     std::ifstream m_in_file;
     std::vector<std::string> tokens;
+    bool token_success = true;
 
 };
 
